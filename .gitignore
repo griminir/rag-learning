@@ -1,0 +1,4 @@
+# ChromaDB Data Directory
+/data/vector_store/
+/node_modules/
+/data/.file_cache.json

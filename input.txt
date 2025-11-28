@@ -1,0 +1,5 @@
+This is a sample text file for demonstrating document loading and text chunking with LangChain.
+
+The RecursiveCharacterTextSplitter will break this text into smaller chunks while maintaining some overlap between chunks to preserve context.
+
+This helps when working with large documents that need to be processed by language models with token limits.

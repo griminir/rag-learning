@@ -1,0 +1,1 @@
+Vector databases are specialized storage systems for embeddings. They enable semantic search using cosine distance and other similarity metrics. RAG systems combine retrieval with generation for enhanced AI capabilities.

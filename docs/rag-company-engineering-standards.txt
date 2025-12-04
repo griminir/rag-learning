@@ -1,0 +1,633 @@
+# RAG Technologies Inc. - Product Development and Engineering Standards
+
+**Document ID**: ENG-STD-001
+**Version**: 2.4
+**Effective Date**: March 1, 2024
+**Owner**: Engineering Leadership Team
+**Classification**: Internal
+
+## 1. Introduction
+
+This document establishes the standards, processes, and best practices for product development at RAG Technologies. Adherence to these standards ensures we deliver high-quality, secure, and maintainable software products that meet our customers' needs.
+
+Our engineering philosophy centers on building reliable, scalable systems that can evolve with changing requirements. We value simplicity over complexity, automation over manual processes, and collaboration over silos.
+
+## 2. Development Methodology
+
+### 2.1 Agile Framework
+
+RAG Technologies uses a modified Scrum framework with the following ceremonies:
+
+**Sprint Planning** (Every other Monday, 2 hours)
+Teams commit to work for the upcoming 2-week sprint. Stories must be properly groomed with acceptance criteria and estimates before inclusion.
+
+**Daily Standup** (Daily, 15 minutes max)
+Brief synchronization meeting. Three questions: What did you accomplish? What will you work on? Any blockers?
+
+**Sprint Review** (Every other Friday, 1 hour)
+Demonstration of completed work to stakeholders. Focus on working software, not slides.
+
+**Sprint Retrospective** (Every other Friday, 1 hour)
+Team reflection on what went well, what didn't, and what to improve. Action items tracked and followed up.
+
+**Backlog Refinement** (Weekly, 1 hour)
+Preparation of upcoming stories. Clarify requirements, add acceptance criteria, estimate effort.
+
+### 2.2 Team Structure
+
+Engineering teams are organized as autonomous squads with 5-8 members:
+
+- 1 Engineering Manager (people management, process)
+- 1 Tech Lead (technical direction, architecture)
+- 4-6 Engineers (mix of senior and mid-level)
+- Access to: Product Manager, Designer, QA (may be shared across squads)
+
+Squads own specific product areas or platform capabilities end-to-end, including development, testing, deployment, and on-call support.
+
+Current Squads:
+- **Retrieval Squad**: Search, ranking, relevance
+- **Ingestion Squad**: Document processing, chunking, embedding
+- **Platform Squad**: Infrastructure, developer experience, observability
+- **API Squad**: Public API, integrations, SDKs
+- **Intelligence Squad**: ML models, fine-tuning, evaluation
+- **Enterprise Squad**: Multi-tenancy, admin features, compliance
+
+### 2.3 Work Item Hierarchy
+
+**Epic**: Large initiative spanning multiple sprints (e.g., "Multi-language support")
+**Story**: User-facing functionality deliverable in one sprint (e.g., "As a user, I can search in Norwegian")
+**Task**: Technical work item (e.g., "Integrate Norwegian language model")
+**Bug**: Defect in existing functionality
+**Spike**: Time-boxed research or prototyping
+
+Stories should follow INVEST criteria:
+- **I**ndependent: Can be developed without dependencies on other stories
+- **N**egotiable: Details can be discussed and refined
+- **V**aluable: Delivers value to users or the business
+- **E**stimable: Team can estimate the effort required
+- **S**mall: Completable within one sprint
+- **T**estable: Clear criteria for "done"
+
+### 2.4 Definition of Done
+
+A story is "Done" when:
+- [ ] Code complete and peer reviewed
+- [ ] Unit tests written and passing (minimum 80% coverage for new code)
+- [ ] Integration tests passing
+- [ ] Documentation updated
+- [ ] Security review completed (if applicable)
+- [ ] Deployed to staging environment
+- [ ] Product Owner acceptance
+- [ ] No critical or high-severity bugs
+
+## 3. Technical Standards
+
+### 3.1 Programming Languages
+
+**Primary Languages**:
+- **TypeScript**: Frontend, Node.js services, tooling
+- **Python**: ML/AI components, data processing, scripting
+- **Go**: High-performance services, infrastructure tooling
+- **Rust**: Performance-critical components, WebAssembly
+
+**Language Selection Criteria**:
+- Use existing language if appropriate for the problem
+- Consider team expertise and hiring implications
+- Evaluate library ecosystem for the domain
+- New language adoption requires Architecture Review Board approval
+
+### 3.2 Code Style and Formatting
+
+Consistent code style reduces cognitive load and merge conflicts.
+
+**TypeScript/JavaScript**:
+- ESLint with our custom configuration (@ragtechnologies/eslint-config)
+- Prettier for formatting (default settings)
+- No `any` types except when absolutely necessary (requires comment justification)
+
+**Python**:
+- Black for formatting (default settings)
+- Ruff for linting
+- Type hints required for all function signatures
+- Docstrings for all public functions (Google style)
+
+**Go**:
+- gofmt (standard formatting)
+- golangci-lint with our configuration
+- Effective Go guidelines
+
+All repositories have pre-commit hooks enforcing style. CI fails on style violations.
+
+### 3.3 Version Control
+
+**Git Workflow**:
+- Main branch is always deployable
+- Feature branches from main
+- Branch naming: `<type>/<ticket>-<description>`
+  - Examples: `feature/RAG-1234-add-norwegian-support`, `fix/RAG-5678-search-timeout`
+- Rebase before merging to maintain linear history
+- Squash commits for cleaner history (unless commit history is meaningful)
+
+**Commit Messages**:
+Follow Conventional Commits specification:
+```
+<type>(<scope>): <description>
+
+[optional body]
+
+[optional footer]
+```
+
+Types: feat, fix, docs, style, refactor, perf, test, chore
+Example: `feat(search): add support for Norwegian language queries`
+
+**Pull Requests**:
+- Clear description of changes and why
+- Link to relevant ticket
+- Screenshots for UI changes
+- All CI checks must pass
+- Minimum one approval from code owner
+- Author merges after approval
+
+### 3.4 Code Review Guidelines
+
+**For Authors**:
+- Keep PRs small (<400 lines when possible)
+- Provide context and explain non-obvious decisions
+- Self-review before requesting review
+- Respond to all comments (resolve or discuss)
+
+**For Reviewers**:
+- Review within 24 hours (business days)
+- Be respectful and constructive
+- Distinguish between blocking issues and suggestions
+- Focus on: correctness, security, maintainability, performance
+- Use conventional comments (nitpick:, question:, suggestion:, issue:)
+
+**What to Look For**:
+- Does the code do what it claims?
+- Are edge cases handled?
+- Is error handling appropriate?
+- Are there security implications?
+- Will this scale?
+- Is it testable?
+- Is it readable?
+
+### 3.5 Testing Standards
+
+**Test Pyramid**:
+- Unit tests: 70% of tests (fast, isolated, numerous)
+- Integration tests: 20% of tests (verify component interactions)
+- End-to-end tests: 10% of tests (critical user journeys only)
+
+**Unit Tests**:
+- Test one thing per test
+- Use descriptive test names (given_when_then or should_when format)
+- Mock external dependencies
+- Aim for 80%+ code coverage on new code
+- Focus on behavior, not implementation
+
+**Integration Tests**:
+- Test API contracts
+- Use test containers for databases/services
+- Run in CI pipeline
+- Clean up test data after runs
+
+**End-to-End Tests**:
+- Cover critical user journeys
+- Use Playwright for browser automation
+- Run nightly (too slow for every PR)
+- Maintain in dedicated test repository
+
+**Test Data**:
+- Use factories/fixtures, not production data
+- Anonymize any real data used
+- Store test fixtures in repositories
+
+### 3.6 Documentation
+
+**Code Documentation**:
+- Self-documenting code preferred (clear names, small functions)
+- Comments for "why", not "what"
+- JSDoc/docstrings for public APIs
+- README in every repository
+
+**Technical Documentation**:
+- Architecture Decision Records (ADRs) for significant decisions
+- API documentation auto-generated from OpenAPI specs
+- Runbooks for operational procedures
+- Located in Confluence or repository docs/ folder
+
+**User Documentation**:
+- Maintained by Technical Writing team
+- Engineers responsible for initial draft of new features
+- Published to docs.ragtechnologies.com
+
+## 4. Architecture Standards
+
+### 4.1 Service Architecture
+
+RAG Technologies uses a microservices architecture with the following principles:
+
+**Service Boundaries**:
+- Services own their data (no shared databases)
+- Services communicate via well-defined APIs
+- Services are independently deployable
+- Services are organized around business capabilities
+
+**Service Communication**:
+- Synchronous: REST/HTTP for queries, gRPC for internal high-throughput
+- Asynchronous: Apache Kafka for events and streaming
+- Service mesh (Istio) for traffic management and security
+
+**Service Size Guidelines**:
+- Small enough for one team to own
+- Large enough to be independently valuable
+- 2-pizza team rule (5-8 engineers can own 2-4 services)
+
+### 4.2 API Design
+
+**REST API Standards**:
+- Use nouns for resources, verbs for actions
+- Consistent URL structure: `/api/v1/{resource}/{id}/{sub-resource}`
+- HTTP methods: GET (read), POST (create), PUT (replace), PATCH (update), DELETE (remove)
+- Status codes: 200 (OK), 201 (Created), 400 (Bad Request), 401 (Unauthorized), 403 (Forbidden), 404 (Not Found), 500 (Server Error)
+- Pagination for list endpoints (cursor-based preferred)
+- Versioning in URL path (/v1/, /v2/)
+
+**Request/Response Format**:
+- JSON for all APIs
+- Consistent error format:
+```json
+{
+  "error": {
+    "code": "INVALID_INPUT",
+    "message": "Human-readable description",
+    "details": [...]
+  }
+}
+```
+- Timestamps in ISO 8601 format (UTC)
+- IDs as strings (UUIDs or prefixed IDs like `doc_abc123`)
+
+**API Documentation**:
+- OpenAPI 3.0 specification for all APIs
+- Examples for all endpoints
+- Published to developer portal
+
+### 4.3 Data Architecture
+
+**Database Selection**:
+- PostgreSQL: Primary relational database (ACID transactions, complex queries)
+- Redis: Caching, session storage, rate limiting
+- Elasticsearch: Full-text search, logging
+- ChromaDB/Pinecone: Vector storage for embeddings
+- Apache Kafka: Event streaming, message queue
+
+**Data Modeling**:
+- Normalize for write-heavy workloads
+- Denormalize for read-heavy workloads (with sync mechanisms)
+- Use UUIDs for primary keys (not auto-increment)
+- Include audit columns: created_at, updated_at, created_by, updated_by
+- Soft delete (deleted_at) for recoverable data
+
+**Schema Management**:
+- All schema changes through migrations
+- Migrations are versioned and idempotent
+- Backwards-compatible changes when possible
+- Coordinate breaking changes with dependent services
+
+### 4.4 Security Architecture
+
+**Authentication**:
+- OAuth 2.0 / OpenID Connect for user authentication
+- API keys for service-to-service and external integrations
+- JWT tokens with short expiration (1 hour)
+- Refresh tokens stored securely (httpOnly cookies)
+
+**Authorization**:
+- Role-Based Access Control (RBAC) at application level
+- Attribute-Based Access Control (ABAC) for fine-grained permissions
+- Permissions checked at API gateway and service level
+- Audit logging for all authorization decisions
+
+**Data Protection**:
+- Encryption at rest (AES-256)
+- Encryption in transit (TLS 1.3)
+- Sensitive data tokenized or encrypted at application level
+- PII handling follows data classification policy
+
+**Security Testing**:
+- SAST (Static Analysis) in CI pipeline
+- DAST (Dynamic Analysis) on staging
+- Dependency vulnerability scanning
+- Penetration testing quarterly
+
+## 5. Infrastructure and DevOps
+
+### 5.1 Infrastructure as Code
+
+All infrastructure is defined in code:
+- **Terraform**: Cloud infrastructure (AWS, GCP, Azure)
+- **Kubernetes manifests**: Application deployments
+- **Helm charts**: Packaged Kubernetes applications
+- **Ansible**: Configuration management (legacy systems only)
+
+**IaC Standards**:
+- Modular, reusable components
+- Environment-specific variables (not hardcoded)
+- State stored remotely (Terraform Cloud)
+- Changes through pull requests with plan review
+
+### 5.2 Continuous Integration
+
+All repositories use GitHub Actions for CI:
+
+**Standard Pipeline Stages**:
+1. **Build**: Compile code, install dependencies
+2. **Lint**: Code style and static analysis
+3. **Test**: Unit and integration tests
+4. **Security Scan**: Dependency vulnerabilities, secrets detection
+5. **Build Artifact**: Docker image, package, or binary
+
+**CI Requirements**:
+- All checks must pass before merge
+- Coverage reports uploaded to Codecov
+- Build artifacts pushed to registry (versioned)
+- Notifications to Slack on failure
+
+### 5.3 Continuous Deployment
+
+**Deployment Pipeline**:
+1. **Development**: Auto-deploy on merge to main
+2. **Staging**: Auto-deploy after dev success, runs E2E tests
+3. **Production**: Manual approval, canary rollout
+
+**Deployment Strategies**:
+- **Canary**: 5% → 25% → 50% → 100% (default for services)
+- **Blue-Green**: Instant cutover with rollback capability
+- **Feature Flags**: Gradual rollout to user segments
+
+**Deployment Safety**:
+- Automated rollback on error rate spike
+- Health checks before traffic shift
+- Database migrations run separately from application deploy
+- Deployment windows (avoid Friday afternoons!)
+
+### 5.4 Observability
+
+**The Three Pillars**:
+
+**Metrics** (Prometheus + Grafana):
+- Request rate, error rate, duration (RED metrics)
+- Resource utilization (CPU, memory, disk)
+- Business metrics (queries per second, documents processed)
+- Alerts on anomalies and thresholds
+
+**Logs** (ELK Stack):
+- Structured JSON logging
+- Correlation IDs for request tracing
+- Log levels: DEBUG, INFO, WARN, ERROR
+- 30-day retention in hot storage, 1-year in cold
+
+**Traces** (Jaeger):
+- Distributed tracing across services
+- Automatic instrumentation via OpenTelemetry
+- Sampling at 1% for high-traffic endpoints
+- Full tracing for errors
+
+**Dashboards**:
+- Every service has a standard dashboard
+- Team-specific dashboards for business metrics
+- Executive dashboard for KPIs
+- On-call dashboard for incident response
+
+### 5.5 On-Call and Incident Management
+
+**On-Call Rotation**:
+- Each squad maintains own rotation
+- Primary and secondary on-call
+- 1-week rotation, handoff on Mondays
+- Compensation: additional PTO or pay
+
+**Incident Severity Levels**:
+
+| Level | Definition | Response Time | Example |
+|-------|------------|---------------|---------|
+| SEV1 | Service down, major customer impact | 15 min | Production API returning 500s |
+| SEV2 | Degraded service, significant impact | 30 min | Search latency 10x normal |
+| SEV3 | Minor issue, limited impact | 4 hours | Non-critical feature broken |
+| SEV4 | Minimal impact, cosmetic issue | Next business day | UI alignment bug |
+
+**Incident Process**:
+1. Alert fires, on-call paged
+2. Acknowledge within response SLA
+3. Start incident channel (#inc-<date>-<description>)
+4. Investigate and mitigate
+5. Communicate status updates
+6. Resolve and close incident
+7. Schedule post-mortem for SEV1/SEV2
+
+**Post-Mortems**:
+- Blameless culture
+- Focus on systems and processes, not individuals
+- Identify contributing factors
+- Action items with owners and deadlines
+- Published to team for learning
+
+## 6. Development Environment
+
+### 6.1 Local Development Setup
+
+**Required Tools**:
+- Git (2.40+)
+- Node.js (20 LTS) via nvm
+- Python (3.11+) via pyenv
+- Docker Desktop
+- kubectl and Helm
+- AWS CLI (configured with SSO)
+
+**IDE Recommendations**:
+- VS Code (primary, with standard extensions)
+- JetBrains IDEs (WebStorm, PyCharm)
+- Vim/Neovim (for the adventurous)
+
+**Standard Extensions (VS Code)**:
+- ESLint, Prettier
+- Python, Pylance
+- Docker, Kubernetes
+- GitLens
+- GitHub Copilot (company license)
+
+### 6.2 Local Environment
+
+**Development Services**:
+Most services can be run locally with Docker Compose:
+```bash
+git clone <repo>
+cd <repo>
+docker-compose up -d
+npm run dev
+```
+
+**Shared Development Environment**:
+For integration testing, use the shared dev cluster:
+- dev.ragtechnologies.internal
+- Refreshed nightly from sanitized production data
+- Shared by all engineers (be considerate)
+
+### 6.3 Development Databases
+
+**Local Development**:
+- Docker containers for PostgreSQL, Redis, etc.
+- Seed data via migrations and fixtures
+- Never connect to production from local
+
+**Cloud Development**:
+- Each engineer has a personal namespace in dev cluster
+- Create/destroy databases on demand
+- Automatic cleanup after 7 days of inactivity
+
+## 7. Release Management
+
+### 7.1 Versioning
+
+**Semantic Versioning** (SemVer) for libraries and APIs:
+- MAJOR: Breaking changes
+- MINOR: New features, backwards compatible
+- PATCH: Bug fixes, backwards compatible
+
+Example: 2.4.1 → 2.5.0 (new feature) → 3.0.0 (breaking change)
+
+**Calendar Versioning** (CalVer) for applications:
+- Format: YYYY.MM.PATCH
+- Example: 2024.03.1, 2024.03.2
+
+### 7.2 Release Process
+
+**Standard Release** (weekly):
+- Cut release branch Tuesday
+- Testing Wednesday-Thursday
+- Production deploy Friday morning
+- No deploys Friday afternoon
+
+**Hotfix Release** (as needed):
+- Branch from production tag
+- Minimal, targeted fix only
+- Expedited review and testing
+- Can deploy any day
+
+### 7.3 Feature Flags
+
+Feature flags enable safe releases and experimentation:
+
+**Flag Types**:
+- **Release flags**: Short-lived, remove after full rollout
+- **Experiment flags**: A/B tests with metrics
+- **Ops flags**: Kill switches, operational controls
+- **Permission flags**: Premium features, entitlements
+
+**Flag Lifecycle**:
+1. Create flag in LaunchDarkly
+2. Implement feature behind flag
+3. Test with flag off and on
+4. Gradual rollout (5% → 25% → 50% → 100%)
+5. Remove flag after full rollout (within 30 days)
+
+## 8. Performance Standards
+
+### 8.1 Performance Requirements
+
+**API Latency Targets**:
+- P50: < 100ms
+- P95: < 500ms
+- P99: < 1s
+
+**Availability Targets**:
+- Core API: 99.95% (21.9 minutes downtime/month)
+- Admin features: 99.9% (43.8 minutes downtime/month)
+- Background jobs: 99.5%
+
+**Throughput**:
+- Search API: 10,000 requests/second
+- Ingestion: 1,000 documents/second
+
+### 8.2 Performance Testing
+
+**Load Testing**:
+- Run before major releases
+- Use production-like data volumes
+- Test at 2x expected peak load
+- Tools: k6, Locust
+
+**Profiling**:
+- CPU and memory profiling in development
+- Production profiling via sampling (low overhead)
+- Flame graphs for optimization
+
+**Performance Budgets**:
+- Frontend bundle size: < 200KB (gzipped)
+- Time to First Byte: < 200ms
+- Largest Contentful Paint: < 2.5s
+- Cumulative Layout Shift: < 0.1
+
+## 9. Compliance and Governance
+
+### 9.1 Architecture Review Board
+
+The ARB reviews and approves:
+- New services or significant service changes
+- New technology adoption
+- Major architectural changes
+- Security-sensitive designs
+
+**Review Process**:
+1. Submit Architecture Decision Record (ADR)
+2. Schedule review at weekly ARB meeting
+3. Present and discuss
+4. Approval, conditional approval, or rejection
+5. Document decision and rationale
+
+### 9.2 Technical Debt Management
+
+**Tracking**:
+- Technical debt tracked in Jira (label: tech-debt)
+- Quarterly tech debt review
+- Each team allocates 20% capacity to tech debt
+
+**Prioritization Criteria**:
+- Security impact
+- Developer productivity impact
+- Customer impact
+- Cost of delay
+
+### 9.3 Open Source
+
+**Using Open Source**:
+- Check license compatibility (approved list maintained)
+- Evaluate maintenance and security posture
+- Prefer widely-adopted projects
+- Document dependencies and licenses
+
+**Contributing to Open Source**:
+- Contributions encouraged (up to 5% time)
+- Company-relevant contributions especially valued
+- Get manager approval for significant contributions
+- Don't contribute proprietary code or algorithms
+
+---
+
+**Document History**
+
+| Version | Date | Author | Changes |
+|---------|------|--------|---------|
+| 1.0 | 2021-03-01 | Engineering Leadership | Initial release |
+| 2.0 | 2022-06-15 | Engineering Leadership | Added microservices standards |
+| 2.1 | 2022-11-01 | Platform Team | Updated CI/CD pipeline |
+| 2.2 | 2023-04-01 | Security Team | Enhanced security section |
+| 2.3 | 2023-09-15 | Engineering Leadership | Added AI/ML standards |
+| 2.4 | 2024-03-01 | Engineering Leadership | Annual review and updates |
+
+**Questions or Suggestions?**
+Contact: engineering-standards@ragtechnologies.com
+Slack: #engineering-standards

@@ -1,0 +1,520 @@
+# RAG Technologies Inc. - Information Security Policy
+
+**Document ID**: SEC-POL-001
+**Version**: 3.2
+**Effective Date**: January 1, 2024
+**Review Date**: January 1, 2025
+**Classification**: Internal
+
+## 1. Purpose and Scope
+
+This Information Security Policy establishes the framework for protecting RAG Technologies' information assets, systems, and data. It applies to all employees, contractors, consultants, temporary workers, and third parties who access company information or systems.
+
+The policy covers all forms of information including electronic data, paper documents, verbal communications, and intellectual property. It applies regardless of where work is performed—in the office, at home, or while traveling.
+
+## 2. Information Security Principles
+
+RAG Technologies' security program is built on three fundamental principles:
+
+### 2.1 Confidentiality
+Information must be accessible only to those authorized to access it. We implement access controls, encryption, and other safeguards to prevent unauthorized disclosure.
+
+### 2.2 Integrity
+Information must be accurate and complete. We implement controls to prevent unauthorized modification and ensure data quality throughout its lifecycle.
+
+### 2.3 Availability
+Information must be accessible when needed by authorized users. We implement redundancy, backup, and disaster recovery measures to ensure business continuity.
+
+## 3. Roles and Responsibilities
+
+### 3.1 Chief Information Security Officer (CISO)
+The CISO is responsible for the overall security program, including policy development, risk management, incident response, and security awareness. The CISO reports directly to the CEO and provides quarterly updates to the Board of Directors.
+
+**Current CISO**: Dr. Ingrid Larsen (ingrid.larsen@ragtechnologies.com)
+
+### 3.2 Security Team
+The Information Security team implements and operates security controls, monitors for threats, investigates incidents, and provides guidance to the organization. The team operates a 24/7 Security Operations Center (SOC) in our Oslo headquarters.
+
+### 3.3 IT Department
+IT is responsible for implementing technical security controls, maintaining secure infrastructure, and supporting security initiatives. IT works closely with Security to ensure systems are configured according to security standards.
+
+### 3.4 Department Managers
+Managers are responsible for ensuring their teams comply with security policies, complete required training, and report security concerns. Managers must approve access requests for their team members.
+
+### 3.5 All Employees
+Every employee is responsible for protecting information assets, following security policies, completing security training, and reporting incidents and vulnerabilities.
+
+## 4. Data Classification
+
+All information must be classified according to its sensitivity. RAG Technologies uses four classification levels:
+
+### 4.1 Public
+Information intended for public disclosure. No access restrictions required.
+- Published marketing materials
+- Press releases
+- Public website content
+- Open source code contributions
+
+### 4.2 Internal
+Information for use within the company. Should not be shared externally without authorization.
+- Internal communications
+- Non-sensitive business documents
+- General policies and procedures
+- Internal project documentation
+
+### 4.3 Confidential
+Sensitive business information that could harm the company if disclosed. Access restricted to those with legitimate business need.
+- Financial data and forecasts
+- Strategic plans
+- Customer lists and pricing
+- Employee personal information
+- Non-public product roadmaps
+
+### 4.4 Restricted
+Highly sensitive information requiring the strongest protections. Access strictly limited and monitored.
+- Customer personal data (PII)
+- Trade secrets and source code
+- Security configurations and credentials
+- Legal matters and investigations
+- M&A activities
+
+## 5. Access Control
+
+### 5.1 Principle of Least Privilege
+Users are granted only the minimum access necessary to perform their job functions. Access rights are reviewed quarterly and adjusted as roles change.
+
+### 5.2 Identity and Access Management
+All users must have a unique identity in our identity management system (Okta). Generic or shared accounts are prohibited except for specific approved use cases with compensating controls.
+
+### 5.3 Authentication Requirements
+
+**Standard Users**:
+- Minimum 12-character password with complexity requirements
+- Multi-factor authentication (MFA) required for all systems
+- Password rotation every 90 days
+- Account lockout after 5 failed attempts
+
+**Privileged Users** (system administrators, database administrators, etc.):
+- Minimum 16-character password
+- Hardware security key required (YubiKey)
+- Password rotation every 30 days
+- Privileged Access Management (PAM) system with session recording
+- Just-in-time access for sensitive systems
+
+### 5.4 Remote Access
+Remote access to company systems requires:
+- Company-managed device or approved BYOD device
+- VPN connection using the GlobalProtect client
+- Multi-factor authentication
+- Compliance with endpoint security requirements
+
+Public WiFi should be avoided. If necessary, use the VPN immediately upon connecting.
+
+### 5.5 Third-Party Access
+Third parties requiring access to company systems must:
+- Sign appropriate NDAs and security agreements
+- Complete security awareness training
+- Use dedicated accounts (not shared)
+- Access only systems necessary for their work
+- Have access reviewed monthly and revoked when engagement ends
+
+## 6. Data Protection
+
+### 6.1 Encryption Standards
+
+**Data in Transit**:
+- TLS 1.3 required for all external connections
+- TLS 1.2 minimum for internal connections
+- VPN using IKEv2/IPSec for remote access
+- Certificate-based authentication where possible
+
+**Data at Rest**:
+- AES-256 encryption for all Confidential and Restricted data
+- Full disk encryption (BitLocker/FileVault) on all endpoints
+- Database encryption using transparent data encryption (TDE)
+- Key management through HashiCorp Vault
+
+### 6.2 Data Handling
+
+**Storage**:
+- Confidential and Restricted data must be stored in approved locations only
+- Approved locations: Company-managed servers, approved cloud services (AWS, Azure, Google Cloud with proper configuration)
+- Prohibited locations: Personal devices, personal cloud storage, USB drives (without encryption and approval)
+
+**Transmission**:
+- Use encrypted channels (HTTPS, SFTP, encrypted email)
+- Large file transfers through approved file sharing tools (SharePoint, Box)
+- Do not send Restricted data via email without encryption
+
+**Disposal**:
+- Electronic data: Secure deletion using approved tools
+- Paper documents: Cross-cut shredding
+- Storage media: Physical destruction through certified vendor
+- Maintain disposal records for Confidential and Restricted data
+
+### 6.3 Data Loss Prevention (DLP)
+DLP tools monitor and prevent unauthorized data exfiltration. Controls include:
+- Email scanning for sensitive content
+- Cloud access security broker (CASB) for SaaS applications
+- Endpoint DLP agents on all company devices
+- Network DLP at egress points
+
+Legitimate business activities may occasionally trigger DLP alerts. False positives should be reported to Security for policy tuning.
+
+## 7. Endpoint Security
+
+### 7.1 Company-Managed Devices
+All company devices must comply with our security standards:
+
+**Laptops and Desktops**:
+- Operating system: Windows 11 or macOS 13+
+- Full disk encryption enabled
+- Endpoint Detection and Response (EDR) agent installed
+- Automatic updates enabled
+- Local firewall enabled
+- Antivirus with real-time protection
+
+**Mobile Devices**:
+- iOS 16+ or Android 13+ required
+- Mobile Device Management (MDM) enrollment
+- Screen lock with biometrics or 6-digit PIN
+- Remote wipe capability enabled
+- Approved apps only from managed app store
+
+### 7.2 Bring Your Own Device (BYOD)
+Personal devices may access company data under these conditions:
+- Device registered in MDM system
+- Meets minimum OS version requirements
+- Encryption and screen lock enabled
+- User agrees to BYOD policy
+- Company can perform limited remote wipe (company data only)
+- Access limited to email, calendar, and approved applications
+
+### 7.3 Software Management
+- Only approved software may be installed
+- Software requests submitted through ServiceNow
+- Automatic vulnerability scanning of all installed software
+- Critical vulnerabilities must be patched within 72 hours
+- High vulnerabilities within 7 days
+- Medium vulnerabilities within 30 days
+
+## 8. Network Security
+
+### 8.1 Network Architecture
+RAG Technologies implements a zero-trust network architecture:
+- No implicit trust based on network location
+- All access requires authentication and authorization
+- Micro-segmentation between network zones
+- Encrypted connections for all internal traffic
+
+### 8.2 Network Zones
+
+**Public Zone**: Internet-facing services with strict security controls
+- Web application firewalls (WAF)
+- DDoS protection
+- Regular penetration testing
+
+**DMZ**: Services accessible from public zone
+- Isolated from internal network
+- Jump servers for administrative access
+- Heavily monitored
+
+**Corporate Zone**: Standard business systems
+- Employee workstations
+- Internal applications
+- Collaboration tools
+
+**Restricted Zone**: Sensitive systems and data
+- Production databases
+- Financial systems
+- Customer data stores
+- Additional monitoring and access controls
+
+### 8.3 Wireless Networks
+Office wireless networks are secured with WPA3 Enterprise authentication. Guest networks are isolated and provide internet access only—no access to internal resources.
+
+### 8.4 Firewalls and Intrusion Prevention
+- Next-generation firewalls at all network boundaries
+- Intrusion Detection/Prevention Systems (IDS/IPS)
+- All traffic logged and monitored by SOC
+- Default deny policy—explicit allow rules required
+
+## 9. Application Security
+
+### 9.1 Secure Development Lifecycle
+All software development follows our Secure SDLC:
+
+**Design Phase**:
+- Threat modeling for new features
+- Security architecture review
+- Privacy impact assessment
+
+**Development Phase**:
+- Secure coding training for all developers
+- Static Application Security Testing (SAST)
+- Code review including security review
+- Secrets scanning in repositories
+
+**Testing Phase**:
+- Dynamic Application Security Testing (DAST)
+- Penetration testing for major releases
+- Dependency vulnerability scanning
+- Security regression testing
+
+**Deployment Phase**:
+- Hardened configurations
+- Infrastructure as Code security scanning
+- Container image scanning
+- Runtime Application Self-Protection (RASP)
+
+### 9.2 Third-Party Software
+Before adopting third-party software or services:
+- Security assessment by Security team
+- Review of vendor security certifications (SOC 2, ISO 27001)
+- Data processing agreement if handling personal data
+- Regular reassessment of critical vendors
+
+## 10. Cloud Security
+
+### 10.1 Approved Cloud Providers
+RAG Technologies uses the following approved cloud providers:
+- Amazon Web Services (AWS)
+- Microsoft Azure
+- Google Cloud Platform (GCP)
+
+Other providers require Security approval before use.
+
+### 10.2 Cloud Security Standards
+All cloud deployments must:
+- Use infrastructure as code (Terraform)
+- Follow CIS Benchmarks for configuration
+- Enable cloud-native security services (GuardDuty, Security Center, etc.)
+- Implement proper IAM with role-based access
+- Enable logging to centralized SIEM
+- Encrypt all data at rest and in transit
+- Use private endpoints where available
+
+### 10.3 SaaS Security
+SaaS applications must be approved by Security before use. Approved applications are configured with:
+- SSO integration through Okta
+- API access controls
+- Data loss prevention policies
+- Regular access reviews
+
+The Shadow IT detection program identifies unauthorized SaaS usage for remediation.
+
+## 11. Physical Security
+
+### 11.1 Office Security
+RAG Technologies offices are protected by:
+- Access control systems requiring badge entry
+- Video surveillance in common areas
+- Security personnel during business hours
+- Visitor management system requiring escort
+- Clean desk policy for sensitive areas
+
+### 11.2 Data Center Security
+Our primary data center (Digiplex Oslo) provides:
+- 24/7 security guards
+- Biometric access control
+- Video surveillance with 90-day retention
+- Environmental controls (fire suppression, climate control)
+- Redundant power and connectivity
+- SOC 2 Type II and ISO 27001 certification
+
+### 11.3 Working from Home
+Employees working from home must:
+- Secure their workspace from unauthorized viewing
+- Use privacy screens when in public spaces
+- Lock devices when unattended
+- Secure paper documents appropriately
+- Not allow family members to use work devices
+
+## 12. Incident Response
+
+### 12.1 Incident Definition
+A security incident is any event that compromises or threatens the confidentiality, integrity, or availability of information assets. Examples include:
+- Malware infection
+- Unauthorized access
+- Data breach
+- Phishing attack
+- Lost or stolen device
+- Physical security breach
+
+### 12.2 Reporting Incidents
+All suspected incidents must be reported immediately to:
+- Email: security@ragtechnologies.com
+- Phone: +47 21 93 85 99 (24/7 hotline)
+- Slack: #security-incidents
+
+Do not attempt to investigate incidents yourself—this may destroy evidence or escalate the situation.
+
+### 12.3 Incident Response Process
+
+**Phase 1: Detection and Reporting**
+- Incident reported or detected by monitoring
+- Initial assessment by SOC analyst
+- Incident ticket created and classified
+
+**Phase 2: Containment**
+- Immediate actions to limit damage
+- Preserve evidence for investigation
+- Communicate with stakeholders as needed
+
+**Phase 3: Investigation**
+- Determine root cause and scope
+- Identify affected systems and data
+- Document findings thoroughly
+
+**Phase 4: Eradication**
+- Remove threat from environment
+- Patch vulnerabilities exploited
+- Reset compromised credentials
+
+**Phase 5: Recovery**
+- Restore systems to normal operation
+- Implement additional monitoring
+- Verify successful remediation
+
+**Phase 6: Lessons Learned**
+- Post-incident review within 1 week
+- Document improvements needed
+- Update procedures and controls
+
+### 12.4 Data Breach Notification
+If a breach involves personal data, legal and regulatory notification requirements apply:
+- GDPR: 72-hour notification to supervisory authority
+- Customer notification as required
+- Coordination with Legal, PR, and affected business units
+
+## 13. Business Continuity and Disaster Recovery
+
+### 13.1 Business Impact Analysis
+Critical systems and their recovery requirements:
+
+| System | RTO | RPO | Priority |
+|--------|-----|-----|----------|
+| Customer-facing API | 1 hour | 0 (real-time) | P1 |
+| Internal applications | 4 hours | 1 hour | P2 |
+| Email and collaboration | 8 hours | 4 hours | P2 |
+| Development systems | 24 hours | 24 hours | P3 |
+| Archive systems | 72 hours | 24 hours | P4 |
+
+RTO = Recovery Time Objective (maximum downtime)
+RPO = Recovery Point Objective (maximum data loss)
+
+### 13.2 Backup Requirements
+- All data backed up according to classification
+- Confidential and Restricted: Daily backups, 90-day retention
+- Internal: Weekly backups, 30-day retention
+- Backups encrypted and stored in geographically separate location
+- Monthly backup restoration tests
+
+### 13.3 Disaster Recovery
+- DR site in Stockholm with 4-hour activation capability
+- Annual DR tests with full failover
+- Documented runbooks for all critical systems
+- Communication plan for major outages
+
+## 14. Security Awareness and Training
+
+### 14.1 Required Training
+All employees must complete:
+- New hire security training (within first week)
+- Annual security awareness refresher
+- Phishing simulation exercises (quarterly)
+- Role-specific training as applicable
+
+### 14.2 Phishing Program
+Our phishing simulation program tests employee awareness:
+- Monthly simulated phishing emails
+- Click rates tracked and reported
+- Additional training for users who fail tests
+- Recognition for users who report phishing
+
+Current company click rate: 3.2% (target: <5%)
+
+### 14.3 Security Champions
+Each department has designated Security Champions who:
+- Serve as security liaisons for their team
+- Attend monthly Security Champion meetings
+- Help promote security awareness
+- Escalate security concerns to Security team
+
+## 15. Compliance and Audit
+
+### 15.1 Regulatory Requirements
+RAG Technologies complies with:
+- GDPR (General Data Protection Regulation)
+- Norwegian Personal Data Act
+- SOC 2 Type II
+- ISO 27001:2022
+- PCI DSS (for payment processing)
+
+### 15.2 Internal Audits
+The Internal Audit team conducts:
+- Annual comprehensive security audit
+- Quarterly access reviews
+- Continuous control monitoring
+- Ad-hoc audits as needed
+
+### 15.3 External Audits
+We engage external auditors for:
+- Annual SOC 2 Type II audit
+- ISO 27001 surveillance audits
+- Penetration testing (quarterly)
+- Red team exercises (annual)
+
+### 15.4 Policy Review
+This policy is reviewed annually and updated as needed. Changes require approval from:
+- Chief Information Security Officer
+- Chief Technology Officer
+- Legal Department
+
+## 16. Exceptions
+
+Security policy exceptions may be granted when:
+- Business need clearly outweighs security risk
+- Compensating controls are implemented
+- Exception is documented and time-limited
+- Appropriate management approves
+
+Exception requests are submitted through ServiceNow and reviewed by the Security team. Exceptions are tracked and reviewed quarterly.
+
+## 17. Enforcement
+
+Violations of this policy may result in:
+- Additional training requirements
+- Formal warning
+- Suspension of system access
+- Termination of employment
+- Legal action where warranted
+
+Suspected violations should be reported to security@ragtechnologies.com or the Ethics Hotline.
+
+## 18. Related Documents
+
+- Acceptable Use Policy (SEC-POL-002)
+- Data Classification Guide (SEC-STD-001)
+- Incident Response Playbook (SEC-PRC-001)
+- Vendor Security Assessment Procedure (SEC-PRC-002)
+- Business Continuity Plan (BCP-001)
+- Disaster Recovery Plan (DRP-001)
+
+---
+
+**Document Control**
+
+| Version | Date | Author | Changes |
+|---------|------|--------|---------|
+| 1.0 | 2020-01-15 | I. Larsen | Initial release |
+| 2.0 | 2021-06-01 | I. Larsen | Added cloud security section |
+| 3.0 | 2023-01-01 | I. Larsen | Zero trust architecture updates |
+| 3.1 | 2023-07-01 | I. Larsen | Updated authentication requirements |
+| 3.2 | 2024-01-01 | I. Larsen | Annual review, minor updates |
+
+**Approval**
+
+- Dr. Ingrid Larsen, CISO - Approved
+- Marcus Chen, CTO - Approved
+- Legal Department - Reviewed

@@ -10,13 +10,13 @@ async function main() {
   // await pipeline(["input.txt", "input2.txt"]);
   
   // Process a knowledge base file
-  await pipeline("rag-knowledge.txt");
+  // await pipeline("rag-knowledge.txt");
 
   // Process all files in current directory
   // await pipeline(".");
   
   // Process files in a subdirectory
-  // await pipeline("./docs");
+  await pipeline("./docs");
 }
 
 main();

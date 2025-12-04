@@ -7,8 +7,11 @@ async function main() {
   // await pipeline("input.txt");
   
   // Process multiple files
-  await pipeline(["input.txt", "input2.txt"]);
+  // await pipeline(["input.txt", "input2.txt"]);
   
+  // Process a knowledge base file
+  await pipeline("rag-knowledge.txt");
+
   // Process all files in current directory
   // await pipeline(".");
   

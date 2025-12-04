@@ -1,0 +1,44 @@
+services:
+  # Ollama LLM service
+  ollama:
+    image: ollama/ollama:latest
+    container_name: rag-ollama
+    ports:
+      - '11434:11434'
+    volumes:
+      - ollama_data:/root/.ollama
+    restart: unless-stopped
+
+  # ChromaDB vector database
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: rag-chromadb
+    ports:
+      - '8000:8000'
+    volumes:
+      - chromadb_data:/chroma/chroma
+    environment:
+      - IS_PERSISTENT=TRUE
+      - ANONYMIZED_TELEMETRY=FALSE
+    restart: unless-stopped
+
+  # RAG CLI application
+  cli:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rag-cli
+    depends_on:
+      - ollama
+      - chromadb
+    volumes:
+      - ../docs:/app/docs:ro
+      - cli_data:/app/data
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+
+volumes:
+  ollama_data:
+  chromadb_data:
+  cli_data:

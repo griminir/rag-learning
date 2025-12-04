@@ -5,6 +5,12 @@ import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 const MODEL_NAME = "llama3.1:8b";
 const OLLAMA_BASE_URL = "http://localhost:11434"; // this should be able to hook into an existing Ollama server instance
 
+// # On the remote server, set this environment variable before starting Ollama:
+//OLLAMA_HOST=0.0.0.0:11434 ollama serve
+// this makes Ollama listen on all interfaces, allowing access from other machines
+// model must be available locally on the server
+// firewall must allow access to port 11434 or the chosen port
+
 // System prompt instructing the LLM to answer based on provided context
 const SYSTEM_PROMPT_STRICT = `You are a helpful assistant that answers questions based on the provided context.
 Your answers should be:

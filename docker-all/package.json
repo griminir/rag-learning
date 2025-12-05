@@ -4,6 +4,7 @@
   "description": "Dockerized RAG CLI application",
   "main": "index.js",
   "scripts": {
+    "ingest": "tsx index.ts",
     "rag": "tsx testRag.ts",
     "test": "tsx testRag.ts"
   },

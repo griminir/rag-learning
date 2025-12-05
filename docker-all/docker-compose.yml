@@ -7,6 +7,10 @@ services:
       - '11434:11434'
     volumes:
       - ollama_data:/root/.ollama
+    environment:
+      # How long to keep model loaded after last request
+      # Options: 5m (default), 10m, 30m, 1h, -1 (forever)
+      - OLLAMA_KEEP_ALIVE=${OLLAMA_KEEP_ALIVE:-5m}
     restart: unless-stopped
     deploy:
       resources:

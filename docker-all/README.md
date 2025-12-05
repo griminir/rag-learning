@@ -2,6 +2,29 @@
 
 This folder contains a fully containerized version of the RAG application with three Docker containers working together.
 
+## Requirements
+
+- Docker Desktop with WSL2 integration
+- NVIDIA GPU (optional but recommended for faster inference)
+- NVIDIA Container Toolkit (for GPU support)
+
+### GPU Setup (Recommended)
+
+To enable GPU acceleration, install the NVIDIA Container Toolkit in WSL2:
+
+```bash
+# In WSL2:
+curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+sudo apt-get update
+sudo apt-get install -y nvidia-container-toolkit
+```
+
+Then restart Docker Desktop. Verify GPU access:
+
+```bash
+docker exec rag-ollama nvidia-smi
+```
+
 ## Architecture
 
 ```
@@ -65,7 +88,7 @@ This downloads ~4.7GB for the llama3.1:8b model. Only needed once as the model i
 ### 3. Ingest documents
 
 ```bash
-docker exec -it rag-cli npx tsx index.ts
+docker exec -it rag-cli npm run ingest
 ```
 
 This processes all `.txt` and `.md` files from the `docs/` folder.
@@ -74,16 +97,16 @@ This processes all `.txt` and `.md` files from the `docs/` folder.
 
 ```bash
 # Basic query
-docker exec -it rag-cli npx tsx testRag.ts "What is the security policy?"
+docker exec -it rag-cli npm run rag -- "What is the security policy?"
 
 # With streaming output
-docker exec -it rag-cli npx tsx testRag.ts "How many vacation days?" --stream
+docker exec -it rag-cli npm run rag -- "How many vacation days?" -s
 
 # With verbose mode (shows retrieved documents)
-docker exec -it rag-cli npx tsx testRag.ts "What are the company values?" --verbose
+docker exec -it rag-cli npm run rag -- "What are the company values?" -v
 
 # Allow fallback to general knowledge
-docker exec -it rag-cli npx tsx testRag.ts "What is machine learning?" --fallback
+docker exec -it rag-cli npm run rag -- "What is machine learning?" -f
 ```
 
 ### CLI Options
@@ -146,6 +169,27 @@ curl http://localhost:8000/api/v2/heartbeat
 ```bash
 docker compose build cli
 docker compose up -d cli
+```
+
+### Configure Model Keep-Alive
+
+By default, Ollama unloads the model after 5 minutes of inactivity. You can change this:
+
+```bash
+# Keep model loaded for 30 minutes
+$env:OLLAMA_KEEP_ALIVE="30m"; docker-compose up -d
+
+# Keep model loaded for 1 hour  
+$env:OLLAMA_KEEP_ALIVE="1h"; docker-compose up -d
+
+# Keep model loaded forever (until container restart)
+$env:OLLAMA_KEEP_ALIVE="-1"; docker-compose up -d
+```
+
+Or create a `.env` file in the `docker-all` folder:
+
+```env
+OLLAMA_KEEP_ALIVE=30m
 ```
 
 ### Reset everything
